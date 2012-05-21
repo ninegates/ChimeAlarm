@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ChimeAlermActivity!</string>
+    <string name="app_name">ChimeAlerm</string>
+    <string name="shared_prefs_file_name">Prefs</string>
+    <string name="shared_prefs_key_name_chime_set">ChimeSet</string>
+    <string name="shared_prefs_key_name_chime_volume">ChimeVolume</string>
+    <string name="shared_prefs_key_name_boot_start">BootStart</string>
+    <string name="intent_extra_chime_type">intent_extra_chime_type</string>
+    <string name="ACTION_RING_ALARM">co.jp.feng.android.chimealarm.ACTION_RING_ALARM</string>
+    <string name="ACTION_CANCEL_ALARM">co.jp.feng.android.chimealarm.ACTION_CANCEL_ALARM</string>
+
+</resources>
