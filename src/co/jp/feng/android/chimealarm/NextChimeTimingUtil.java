@@ -12,7 +12,7 @@ public class NextChimeTimingUtil
 //	public static final int TIME_MS_1120 = ((60 * 20) + (60 * 60 * 11)) * 1000;
 //	public static final int TIME_MS_1130 = TIME_MS_1120 + (1000 * 60 * 10);
 //	public static final int TIME_MS_1220 = ((60 * 20) + (60 * 60 * 12)) * 1000;
-//	public static final int TIME_MS_1330 = ((60 * 30) + (60 * 60 * 13)) * 1000;
+//	public static final int TIME_MS_1320 = ((60 * 20) + (60 * 60 * 13)) * 1000;
 //	public static final int TIME_MS_1410 = ((60 * 10) + (60 * 60 * 14)) * 1000;
 //	public static final int TIME_MS_1420 = TIME_MS_1410 + (1000 * 60 * 10);
 //	public static final int TIME_MS_1510 = ((60 * 10) + (60 * 60 * 15)) * 1000;
@@ -28,7 +28,7 @@ public class NextChimeTimingUtil
 		{"1120", "0"},
 		{"1130", "0"},
 		{"1220", "0"},
-		{"1330", "0"},
+		{"1320", "0"},
 		{"1410", "0"},
 		{"1420", "0"},
 		{"1510", "0"},
