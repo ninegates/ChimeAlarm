@@ -1,17 +1,17 @@
 package co.jp.feng.android.chimealarm;
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -85,7 +85,8 @@ public class ChimeAlarmActivity extends Activity
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar)
 			{
-
+				int barVolume = seekBar.getProgress();
+				mPrefs.putIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, barVolume).commit();
 			}
 
 			@Override
@@ -130,10 +131,34 @@ public class ChimeAlarmActivity extends Activity
 		super.onPause();
 
 		boolean isBootStart = mCheckBoxBootStart.isChecked();
-		mPrefs.putBooleanByStringResourceId(R.string.shared_prefs_key_name_boot_start, isBootStart);
+		mPrefs.putBooleanByStringResourceId(R.string.shared_prefs_key_name_boot_start, isBootStart).commit();
 
-		int barVolume = mSeekBarVolume.getProgress();
-		mPrefs.putIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, barVolume).commit();
+		//int barVolume = mSeekBarVolume.getProgress();
+		//mPrefs.putIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, barVolume).commit();
 
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+
+		MenuItem item1 = menu.add(0, 0, 0, "音テスト");
+		item1.setIcon(android.R.drawable.ic_popup_reminder);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == 0)
+		{
+			Intent intent = new Intent(ChimeAlarmActivity.this, AlarmReceiver.class);
+			intent.setAction(getString(R.string.ACTION_TEST_RING_ALARM));
+			sendBroadcast(intent);
+		}
+
+		return true;
 	}
 }

@@ -9,6 +9,7 @@
     <string name="shared_prefs_key_name_boot_start">BootStart</string>
     <string name="intent_extra_chime_type">intent_extra_chime_type</string>
     <string name="ACTION_RING_ALARM">co.jp.feng.android.chimealarm.ACTION_RING_ALARM</string>
+    <string name="ACTION_TEST_RING_ALARM">co.jp.feng.android.chimealarm.ACTION_TEST_RING_ALARM</string>
     <string name="ACTION_CANCEL_ALARM">co.jp.feng.android.chimealarm.ACTION_CANCEL_ALARM</string>
 
 </resources>

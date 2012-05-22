@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.PowerManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -61,6 +62,10 @@ public class AlarmReceiver extends BroadcastReceiver
 					e.printStackTrace();
 				}
 			}
+		}
+		else if (action.equals(context.getString(R.string.ACTION_TEST_RING_ALARM)))
+		{
+			ringChime(context, 0);
 		}
 		else if (action.equals("android.intent.action.BOOT_COMPLETED"))
 		{
@@ -145,6 +150,13 @@ public class AlarmReceiver extends BroadcastReceiver
 
 		MediaPlayer mp = getMediaPlayer(context, chimeType);
 		if (mp == null) return;
+
+		// スクリーンオン
+		PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+		//PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "wake");
+		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, context.getString(R.string.app_name));
+		wl.acquire(15000);
+		//wl.acquire();
 
 		if (mp.isPlaying())
 		{
