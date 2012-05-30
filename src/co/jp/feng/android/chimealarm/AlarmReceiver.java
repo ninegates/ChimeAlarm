@@ -55,10 +55,12 @@ public class AlarmReceiver extends BroadcastReceiver
 				}
 				catch (IllegalStateException e)
 				{
+					Log.e(TAG, "prepare IllegalStateException=" + e.toString());
 					e.printStackTrace();
 				}
 				catch (IOException e)
 				{
+					Log.e(TAG, "prepare IOException. e=" + e.toString());
 					e.printStackTrace();
 				}
 			}
@@ -73,12 +75,15 @@ public class AlarmReceiver extends BroadcastReceiver
 			boolean isChimeSet = prefs.getBooleanByStringResourceId(R.string.shared_prefs_key_name_chime_set, false);
 			boolean isBootStart = prefs.getBooleanByStringResourceId(R.string.shared_prefs_key_name_boot_start, false);
 
+			Log.v(TAG, "android.intent.action.BOOT_COMPLETED isChimeSet=" + isChimeSet + " isBootStart=" + isBootStart);
+
 			if (isChimeSet)
 			{
 				if (isBootStart)
 				{
 					int afterSec = setNextChime(context);
 					Toast.makeText(context, "[BOOT] チャイムをセットしました。 " + afterSec + "秒後に鳴ります。", Toast.LENGTH_SHORT).show();
+					Log.v(TAG, "チャイムをセット sec=" + afterSec);
 				}
 				else
 				{
@@ -110,10 +115,15 @@ public class AlarmReceiver extends BroadcastReceiver
 	 */
 	private MediaPlayer getMediaPlayer(Context context, int chimeType)
 	{
-		if (chimeType == -1) return null;
+		if (chimeType == -1)
+		{
+			Log.v(TAG, "chimeType == -1");
+			return null;
+		}
 
 		if (sAryMp == null)
 		{
+			Log.v(TAG, "sAryMp == null");
 			sAryMp = new SparseArray<MediaPlayer>(8); // とりあえず8
 		}
 
@@ -128,6 +138,7 @@ public class AlarmReceiver extends BroadcastReceiver
 				rawId = mArySoundRawId[chimeType];
 			}
 			catch (Exception e) {
+				Log.e(TAG, "getMediaPlayer Exception. e=" + e.toString());
 				return null;
 			}
 
@@ -135,6 +146,7 @@ public class AlarmReceiver extends BroadcastReceiver
 			sAryMp.put(chimeType, targetMp);
 		}
 
+		Log.v(TAG, "getMediaPlayer success.");
 		return targetMp;
 	}
 
@@ -149,7 +161,11 @@ public class AlarmReceiver extends BroadcastReceiver
 		int prefsVolume = prefs.getIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, 100);
 
 		MediaPlayer mp = getMediaPlayer(context, chimeType);
-		if (mp == null) return;
+		if (mp == null)
+		{
+			Log.w(TAG, "ringChime mp == null");
+			return;
+		}
 
 		// スクリーンオン
 		PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
@@ -167,10 +183,12 @@ public class AlarmReceiver extends BroadcastReceiver
 			}
 			catch (IllegalStateException e)
 			{
+				Log.e(TAG, "ringChime prepare IllegalStateException e=" + e.toString());
 				e.printStackTrace();
 			}
 			catch (IOException e)
 			{
+				Log.e(TAG, "ringChime prepare IOException e=" + e.toString());
 				e.printStackTrace();
 			}
 
@@ -186,10 +204,13 @@ public class AlarmReceiver extends BroadcastReceiver
 		}
 		catch (IllegalStateException e)
 		{
+			Log.e(TAG, "ringChime start IllegalStateException e=" + e.toString());
 			e.printStackTrace();
 		}
 
 		sPrevPlayMp = mp;
+
+		Log.v(TAG, "ringChime success.");
 	}
 
 	/**

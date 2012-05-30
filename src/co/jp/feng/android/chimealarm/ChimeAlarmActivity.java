@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +20,13 @@ import android.widget.ToggleButton;
 public class ChimeAlarmActivity extends Activity
 {
 	private ToggleButton mBtnChimeSet;
-	private TextView mTvVolume;
-	private SeekBar mSeekBarVolume;
+	private TextView mTvChimeVolume;
+	private SeekBar mSeekBarChimeVolume;
+	private TextView mTvDeviceVolume;
+	private SeekBar mSeekBarDeviceVolume;
 	private CheckBox mCheckBoxBootStart;
 	private SharedPreferencesBundle mPrefs;
+	private AudioManager mAudioManager;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -57,7 +61,7 @@ public class ChimeAlarmActivity extends Activity
 					resultStrBuf.append("チャイムをセットしました。 " + nextSec + "秒後に鳴ります。");
 					mPrefs.putBooleanByStringResourceId(R.string.shared_prefs_key_name_chime_set, true);
 
-					int barVolume = mSeekBarVolume.getProgress();
+					int barVolume = mSeekBarChimeVolume.getProgress();
 					mPrefs.putIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, barVolume).commit();
 				}
 				else
@@ -77,9 +81,9 @@ public class ChimeAlarmActivity extends Activity
 			}
 		});
 
-		mTvVolume = (TextView) findViewById(R.id.textViewVolume);
-		mSeekBarVolume = (SeekBar) findViewById(R.id.seekBar1);
-		mSeekBarVolume.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+		mTvChimeVolume = (TextView) findViewById(R.id.textViewSetChimeVolume);
+		mSeekBarChimeVolume = (SeekBar) findViewById(R.id.seekBar1);
+		mSeekBarChimeVolume.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 		{
 
 			@Override
@@ -101,7 +105,38 @@ public class ChimeAlarmActivity extends Activity
 				if (!fromUser)
 					return;
 
-				mTvVolume.setText("Volume:" + String.valueOf(progress));
+				mTvChimeVolume.setText(String.valueOf(progress));
+			}
+		});
+
+		mTvDeviceVolume = (TextView) findViewById(R.id.textViewSetDeviceVolume);
+		mSeekBarDeviceVolume = (SeekBar) findViewById(R.id.seekBar2);
+		mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
+		mSeekBarDeviceVolume.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		mSeekBarDeviceVolume.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+		{
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar)
+			{
+				int barVolume = seekBar.getProgress();
+
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, barVolume, 0);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar)
+			{
+
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+			{
+				if (!fromUser)
+					return;
+
+				mTvDeviceVolume.setText(String.valueOf(progress));
 			}
 		});
 
@@ -119,10 +154,18 @@ public class ChimeAlarmActivity extends Activity
 		boolean isBootStart = mPrefs.getBooleanByStringResourceId(R.string.shared_prefs_key_name_boot_start, false);
 		mCheckBoxBootStart.setChecked(isBootStart);
 
-		int volume = mPrefs.getIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, 100);
-		mSeekBarVolume.setProgress(volume);
+		int chimeVolume = mPrefs.getIntByStringResourceId(R.string.shared_prefs_key_name_chime_volume, 100);
+		mSeekBarChimeVolume.setProgress(chimeVolume);
+		mTvChimeVolume.setText(String.valueOf(chimeVolume));
 
-		mTvVolume.setText("Volume:" + String.valueOf(volume));
+		if (mAudioManager == null)
+		{
+			mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
+		}
+		int deviceVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		mSeekBarDeviceVolume.setProgress(deviceVolume);
+		mTvDeviceVolume.setText(String.valueOf(deviceVolume));
+
 	}
 
 	@Override
